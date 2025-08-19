@@ -1,5 +1,7 @@
 package com.example.trabajopractico_1;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -8,17 +10,30 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.trabajopractico_1.ModoAvion;
+
 public class MainActivity extends AppCompatActivity {
+
+    private ModoAvion eventoAvion ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        eventoAvion = new ModoAvion();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(eventoAvion, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(eventoAvion);
+    }
+
 }
